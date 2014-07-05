@@ -8,6 +8,8 @@
 #include <unistd.h>
 
 #define PI 3.14159265
+#define EJEX 640
+#define EJEY 640
 
 using namespace std;
 
@@ -19,8 +21,8 @@ public:
 	Pajaro()
 	{
 		srand (time(NULL));
-		posX = rand() % 100;
-		posY = rand() % 100;
+		posX = rand() % EJEX;
+		posY = rand() % EJEY;
 		angulo = rand() % 360;
 		cout << "Pájaro id: " << this << " X = " << posX << " Y = " << posY << " Ang = " << angulo  << endl;
 	};
@@ -39,7 +41,7 @@ public:
 		if (movX >= 0.5)
 		{
 			this->posX++;
-			if (this->posX > 99)
+			if (this->posX > 640)
 				this->posX = 0;
 
 		}
@@ -47,7 +49,7 @@ public:
 		{
 			this->posX--;
 			if (this->posX < 0)
-				this->posX = 99;
+				this->posX = 640;
 		}
 
 		if (movY >= 0.5)
@@ -77,10 +79,10 @@ public:
 
 	Monitor()
 	{
-		mapa.resize(100);
+		mapa.resize(EJEX);
 		for (int i = 0; i < 100; ++i)
 		{
-			vector < vector < Pajaro* > > ejeY (100);
+			vector < vector < Pajaro* > > ejeY (EJEY);
 			mapa[i]=ejeY;
 		}
 
