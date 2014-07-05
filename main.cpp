@@ -33,34 +33,35 @@ public:
 
 	void volar ()
 	{
-		double movX = cos ( this->posX * PI / 180.0 );
-		double movY = sin ( this->posY * PI / 180.0 );
+		double movX = sin ( this->angulo * PI / 180.0 );
+		double movY = cos ( this->angulo * PI / 180.0 );
 
 		if (movX >= 0.5)
 		{
-			if (this->angulo > 180 && this->angulo < 360)			
-				this->posX++;
-			else
-				this->posX--;
-
+			this->posX++;
 			if (this->posX > 99)
 				this->posX = 0;
-			if (this->posX < 0)
-				this->posX = 99;
 
 		}
+		else if (movX <= -0.5)
+		{
+			this->posX--;
+			if (this->posX < 0)
+				this->posX = 99;
+		}
+
 		if (movY >= 0.5)
 		{
-			if (this->angulo > 90 && this->angulo < 270)			
-				this->posY++;
-			else
-				this->posY--;
-			
-			if (this->posY > 99)
-				this->posY = 0;
+			this->posY--;			
 			if (this->posY < 0)
 				this->posY = 99;
 
+		}
+		else if (movY <= -0.5)
+		{
+			this->posY++;
+			if (this->posY > 99)
+				this->posY = 0;
 		}
 	};
 
