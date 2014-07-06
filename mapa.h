@@ -10,7 +10,6 @@
 #include <math.h>       /* cos */
 #include <unistd.h>
 #include <uC++.h>
-
 #include "pajaro.h"
 
 #define PI 3.14159265
@@ -19,7 +18,7 @@
 
 using namespace std;
 
-_Monitor Mapa
+_Mutex Mapa
 {
 	vector < vector < Pajaro* > > mapa;
 	vector < Pajaro* > lista;
