@@ -14,7 +14,7 @@
 #define PI 3.14159265
 #define EJEX 640
 #define EJEY 640
-#define CANTIDAD 100
+#define CANTIDAD 10
 
 using namespace std;
 
@@ -94,33 +94,33 @@ protected:
 	{
 		//cielo->nacer(this);
 		cout << "Creada id: " << this << " X = " << posX << " Y = " << posY << " Ang = " << angulo  << endl;
-		cout << "rad " << ( angulo * PI / 180.0 ) << endl;
+		//cout << "rad " << ( angulo * PI / 180.0 ) << endl;
 		//cielo->anadir(posX, posY, this);
 
 
-		for(;;)
+		while(1)
 		{
 			auxposX = posX;
 			auxposY = posY;
 			auxAngulo = angulo;
 			float movX = pow (sin ( angulo * PI / 180.0 ), 2);
 			if (angulo < 360 && angulo > 180)
-				movX*=-1.0;
+				movX *= -1.0;
 			float movY = pow (cos ( angulo * PI / 180.0 ), 2);
 			if (angulo > 90 && angulo < 270)
-				movY*=-1.0;
+				movY *= -1.0;
 
-			posX+=(1.0*movX);
+			posX+=movX;
 			if (posX >= EJEX-1.0)
-				posX -= EJEX-1.0;
+				posX -= EJEX;
 			else if (posX <= 0)
 				posX += EJEX-1.0;
 
-			posY+=(1.0*movY);		
+			posY+=movY;		
 			if (posY <= 0)
 				posY += EJEY-1.0;
 			else if (posY >= EJEY-1.0)
-				posY -= EJEY-1.0;
+				posY -= EJEY;
 		
 			//control.eliminar(auxposX, auxposY, this);
 			//control.anadir(posX, posY, this);
@@ -134,7 +134,7 @@ protected:
 
 
 public:	
-	int auxposX, auxposY, auxAngulo;
+	float auxposX, auxposY, auxAngulo;
 	Pajaro(float posX, float posY, float angulo) : posX(posX), posY(posY), angulo(angulo) {};
 	~Pajaro(){}; 
 };
@@ -142,13 +142,21 @@ public:
 
 vector <Pajaro*> bandada;
 
-void setup(){
-    glClearColor(0.0, 0.0, 0.0, 1.0); // Color de fondo (negro)
+void setup()
+{
+	glClearColor(0.0, 0.0, 0.0, 1.0); // Color de fondo (negro)
     gluOrtho2D(0, EJEX, 0, EJEY);
 }
 
+
 void display(){
-    while(1){
+	
+	
+
+    while(1)
+    {
+    	
+
 	    glClear(GL_COLOR_BUFFER_BIT);
 	    glColor3f(1, 0, 0);
 
@@ -159,11 +167,11 @@ void display(){
 			glTranslatef(bandada[i]->auxposX, bandada[i]->auxposY, 0);
 		    glRotatef(bandada[i]->auxAngulo, 0, 0, 1);
 		    glBegin(GL_TRIANGLES);			
-				glVertex3f( 5,  15, 0);//triangle one first vertex
-		      	glVertex3f(-5,  15, 0);//triangle one second vertex
-		      	glVertex3f( 0, -15, 0);//triangle one third vertex      
+				glVertex3f(-2.5, -4.841225, 0); // Primer vertice
+	            glVertex3f( 2.5, -4.841225, 0); // Segundo vertice
+	            glVertex3f( 0,  4.841225, 0); // Tercer vertice     
 		    glEnd();
-			glRotatef(-(bandada[i]->auxAngulo), 0, 0, 1);
+			glRotatef(-bandada[i]->auxAngulo, 0, 0, 1);
 			glTranslatef(-bandada[i]->auxposX, -bandada[i]->auxposY, 0);
 		}
 	    glFlush();
@@ -173,20 +181,18 @@ void display(){
 
 void uMain::main() 
 {
-	
-	srand (time(NULL));
-	//Mapa *cielo = new Mapa();
-	
-	for(int i = 0; i < CANTIDAD; ++i)
-		bandada.push_back(new Pajaro(rand() % EJEX, rand() % EJEY, rand() % 360));
-
 	glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     glutInitWindowPosition(0, 0); // Posicion de la ventana en pixeles
     glutInitWindowSize(EJEX, EJEY); // Tamano de la ventana en pixeles
     glutCreateWindow("Aves"); // Titulo de la ventana
     glutDisplayFunc(display); // display es la funcion que
-
-    setup();
+	
+	srand (time(NULL));
+	//Mapa *cielo = new Mapa();
+	
+	for(int i = 0; i < CANTIDAD; ++i)
+		bandada.push_back(new Pajaro(rand() % EJEX, rand() % EJEY, rand() % 360));
+	setup();
 	glutMainLoop();
 }
