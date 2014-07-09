@@ -15,9 +15,16 @@
 #define PI 3.14159265
 #define EJEX 640
 #define EJEY 640
-#define CANTIDAD 10
+#define CANTIDAD 3
+#define DMAX 100
+#define CMAX 50
 
 using namespace std;
+bool ready;
+
+
+_Task Pajaro;
+void cohesion(Pajaro* ave, vector <Pajaro*> *cumpleDMAX, vector <Pajaro*> *cumpleCMAX);
 
 _Task Pajaro
 {
@@ -41,6 +48,13 @@ protected:
 			// Cohecion
 			// Alineacion
 
+			vector <Pajaro*> cumpleDMAX, cumpleCMAX;
+			cohesion(this, &cumpleDMAX, &cumpleCMAX);
+
+
+			//for (int i = 0; i < cumpleDMAX.size(); ++i)
+			//	cout << this << " está cerca de " << cumpleDMAX[i] << endl;
+
 			float movX = pow (sin ( angulo * PI / 180.0 ), 2);
 			if (angulo < 360 && angulo > 180)
 				movX *= -1.0;
@@ -60,7 +74,11 @@ protected:
 			else if (posY >= EJEY)
 				posY -= EJEY;
 
-			//Programar toda la interaccion entre las aves 
+			//Programar toda la interaccion entre las aves
+
+			cumpleDMAX.clear();
+			cumpleCMAX.clear();
+			ready=false;
 			uBarrier x(CANTIDAD);
 
 			auxposX = posX;
@@ -70,7 +88,7 @@ protected:
 			auxvelocidad = velocidad;
 
 			uBarrier y(CANTIDAD);
-
+			ready=true;
 		}
 	};
 
@@ -83,6 +101,32 @@ public:
 
 
 vector <Pajaro*> bandada;
+
+void cohesion(Pajaro* ave, vector <Pajaro*> *cumpleDMAX, vector <Pajaro*> *cumpleCMAX)
+{
+	//cout << "coqueo" << endl;
+	float x1, x2, y1, y2, distancia;
+	
+	 
+	for (int i = 0; i < bandada.size(); ++i)
+	{
+		if (bandada[i]==ave)
+			continue;
+		distancia = sqrt(pow(bandada[i]->auxposY - ave->auxposY, 2) +  pow(bandada[i]->auxposX - ave->auxposX, 2));
+		//cout << "pico de " << ave << " " << distancia << endl;
+		if (distancia <= DMAX)
+		{
+			cumpleDMAX->push_back(bandada[i]);
+			//cout << cumpleDMAX << endl;
+		}
+		if (distancia <= CMAX)
+		{
+			cumpleCMAX->push_back(bandada[i]);
+			//cout << "coqueoC" << endl;
+		}
+	}
+}
+
 
 void setup()
 {
@@ -108,12 +152,14 @@ void draw (float auxposX, float auxposY, float auxAngulo)
 void display(){
     while(1)
     {
-    	
-	    glClear(GL_COLOR_BUFFER_BIT);
-	    //cout << bandada[0]->auxposX << " " << bandada[0]->auxposY;
-	    for (int i = 0; i < CANTIDAD; ++i)
-		    draw(bandada[i]->auxposX, bandada[i]->auxposY, bandada[i]->auxAngulo);
-	    glFlush();
+    	if (ready)
+    	{
+		    glClear(GL_COLOR_BUFFER_BIT);
+		    //cout << bandada[0]->auxposX << " " << bandada[0]->auxposY;
+		    for (int i = 0; i < CANTIDAD; ++i)
+			    draw(bandada[i]->auxposX, bandada[i]->auxposY, bandada[i]->auxAngulo);
+		    glFlush();
+		}
     }
 }
 
@@ -135,5 +181,3 @@ void uMain::main()
 	setup();
 	glutMainLoop();
 }
-
-//
